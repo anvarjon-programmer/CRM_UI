@@ -1,0 +1,25 @@
+@mixin center-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-div{
+    display: flex;
+    align-items: center;
+}
+
+@mixin column-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+@mixin fixed{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffffff;
+}

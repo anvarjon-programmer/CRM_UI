@@ -1,0 +1,70 @@
+@import '../../page/varieble.scss';
+nav{
+    @include flex-div();
+    justify-content: space-between;
+    padding: 10px 30px;
+    @include fixed();
+    border-bottom: 1px solid gray;
+}
+.nav__left{
+    @include flex-div();
+    column-gap: 10px;
+    // background-color: black;
+}
+.nav__left--logo{
+    max-width: 50px;
+    img{
+        width: 100%;
+        object-fit: cover;
+    }
+}
+.nav__left--search{
+    @include flex-div();
+    background: #F9F9F9;
+    border-radius: 20px;
+    column-gap: 5px;
+    padding: 10px;
+    .search__icon{
+        font-size: 25px;
+    }
+}
+.nav__left--input{
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 20px;
+}
+.nav__right{
+    @include flex-div();
+    gap: 20px
+}
+.write{
+    @include flex-div();
+    color: #6B6B6B;
+    text-decoration: none;
+}
+.write--icons{
+    font-size: 28px;
+}
+.write:hover{
+    color: inherit;
+    cursor: pointer;
+}
+
+.faBell{
+    background: none;
+    font-size: 26px;
+    color: #6B6B6B;
+}
+.faBell:hover{
+    color: inherit;
+    cursor: pointer;
+}
+.message{
+    border: none;
+    background-color: brown;
+    font-size: 20px;
+    color: #ffffffff;
+    border-radius: 50%;
+    padding: 8px 12px;
+}

@@ -19,7 +19,7 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
             <Card className="shadow-2xl mb-10 w-full max-w-md rounded-3xl backdrop-blur-xl border-y-green-50">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-4 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-[#603310]">
-                        Войдите в аккаунт
+                         Login
                     </h2>
                 </div>
                 <FormContainer
@@ -29,15 +29,17 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                         if (isRememberMe) {
                             localStorage.setItem("accessToken", token);
                             localStorage.setItem("refreshToken", refreshToken);
+                            console.log(refreshToken);
+                            
                         } else {
                             sessionStorage.setItem("accessToken", token);
                             sessionStorage.setItem("refreshToken", refreshToken);
                         }
                         localStorage.setItem("userInfo", JSON.stringify(item));
+                        console.log(1,token);
                         dispatch(login(item));
-                        console.log(item);
                         
-                        navigate("/home");
+                        navigate("/");
                         message.success('You are logged in successfully')
                     }}
                     onError={(err) => {
@@ -48,13 +50,13 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                         {
                             name: "phoneNumber",
                             validations: [{ type: "required" }],
-                            value: "998974757890",
+                            value: "998944676789",
                             onSubmitValue: (value) => value,
                         },
                         {
                             name: "password",
                             validations: [{ type: "required" }],
-                            value: "alice7890",
+                            value: "sophia6789",
                             onSubmitValue: (value) => value,
                         },
                     ]}
@@ -68,7 +70,7 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                                         name="password"
                                         component={MainInput}
                                         placeholder="***********"
-                                        label="Пароль"
+                                        label="Password"
                                         isPassword={true}
                                         labelClass="text-base text-[#603310] font-semibold"/>
                                 </div>
@@ -76,8 +78,8 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                                     <FastField
                                         name="phoneNumber"
                                         component={MainInput}
-                                        placeholder="User Name"
-                                        label="Номер телефона"
+                                        placeholder="Phone number"
+                                        label="PhoneNumber"
                                         isPhone={false}
                                         labelClass="text-base text-[#603310] font-semibold"
                                     />

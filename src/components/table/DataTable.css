@@ -1,0 +1,44 @@
+/* Style for avatar */
+.avatar-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Style for score circles */
+  .circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .green-circle {
+    background-color: #4CAF50; /* Green */
+  }
+  
+  .yellow-circle {
+    background-color: #FFC107; /* Yellow */
+  }
+  
+  .red-circle {
+    background-color: #F44336; /* Red */
+  }
+  
+  /* Optional: Adjusting cell padding and alignment */
+  .MuiDataGrid-cell {
+    padding: 8px;
+    text-align: center;
+  }
+  

@@ -1,7 +1,8 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { BsMedium } from "react-icons/bs";
 import { LiaEditSolid } from "react-icons/lia";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import './Header.scss';
@@ -10,15 +11,14 @@ import { useState } from 'react';
 import Modal from '../../utils/Modal';
 import UserModal from './UserModal';
 
-
 const Header = () => {
   const [modal,setModal] = useState(false);
   const [searchModal, setSearchModal] = useState(false);
   const { pathname } = useLocation();
   
   return (
-    <header className='border-b border-gray-200'>
-         <div className="size h-[60px] flex items-center justify-between px-10">
+    <header className='border-b border-gray-600 bg-white  mb-20 '>
+         <div className="size h-[60px] flex items-center justify-between px-10 fixed z-50 right-0 left-0 bg-white border-b ">
             <div className='flex items-center gap-3 sm:gap-7'>
               
               <Link to='/'>
@@ -38,15 +38,23 @@ const Header = () => {
               <button className='btn !bg-green-700 !py-2'>
               Publish
             </button>) : (
-                <Link to="/write" className='hidden md:flex items-center gap-1 text-gray-500'>
-                <span className='text-3xl'>
-                  <LiaEditSolid/>
+              <>
+                <Link to="/createLessonForm" className='hidden md:flex items-center gap-1 text-gray-500'>
+                <span className='text-xl'>
+                   Add Lesson
                 </span>
-                <span className='text-sm mt-2'>Write</span>
-              </Link>
+                 </Link>
+              </>
               )}
               <span className="text-3xl text-gray-500 cursor-pointer">
-                <IoMdNotificationsOutline />
+                <Link to={'/notification'}>
+                   <IoMdNotificationsOutline />
+                </Link>
+              </span>
+              <span className="text-3xl text-gray-500 cursor-pointer">
+                <Link to={'/chat'}>
+                   <IoChatbubbleEllipsesOutline />
+                </Link>
               </span>
               <div className='flex items-center relative'>
                 <img  onClick={() => setModal(true)}

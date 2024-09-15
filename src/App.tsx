@@ -24,7 +24,7 @@ export const App = () => {
       catch (err: any) {
           message.error(err);
         //   navigate('/login');
-        //   dispatch(logout())
+        //   dispatch(logout());
           setLoading(false)
       } finally {
           setLoading(false)

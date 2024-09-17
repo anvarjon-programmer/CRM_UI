@@ -1,19 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useState, useEffect, Fragment } from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useSearchAppParams } from '../../hooks/useSearchParams';
 import { httpClient } from '../../utils/reques';
+
+interface Attendance {
+  lessonNumber: number;
+  score: number;
+}
+
+interface Student {
+  id: string;
+  studentName: string;
+  studentSurname: string;
+  avatar: string;
+  attendanceList: Attendance[];
+}
 
 const CustomRow = styled('div')(({ theme }) => ({
   border: '1px solid #e0e0e0',
 }));
 
-const DataTable = () => {
-  const [tableData, setTableData] = useState([]);
-  const [loading, setLoading] = useState(true);
+const DataTable:React.FC = () => {
+  const [tableData, setTableData] = useState<Student[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { getParams, setParams } = useSearchAppParams();
 
-  // Get module from URL params or default to 1
   let modul = getParams("module") ?? 1;
 
   const [columns, setColumns] = useState([
@@ -21,7 +33,7 @@ const DataTable = () => {
       field: 'avatar',
       headerName: 'Student',
       width: 300,
-      renderCell: (params) => (
+      renderCell: (params:any) => (
         <div className="flex items-center space-x-4 border p-2 rounded-lg">
           <img className='w-12 h-12 rounded-full object-cover' src={params?.row?.avatar} alt={params.row.studentName} />
           <div>
@@ -32,55 +44,65 @@ const DataTable = () => {
     },
   ]);
 
-  // Fetch data from the server
-  useEffect(() => {
-    fetch("http://localhost:3000/user")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setTableData(data);
-        
-        // Build dynamic columns for lessons
-        const lessonColumns = [];
-        data.forEach(student => {
-          student.attendanceList.forEach((lesson) => {
-            if (!lessonColumns.some(col => col.field === `lesson_${lesson.lessonNumber}`)) {
-              lessonColumns.push({
-                field: `lesson_${lesson.lessonNumber}`,
-                headerName: `Lesson ${lesson.lessonNumber}`,
-                width: 100,
-                renderCell: (params) => {
-                  const lessonData = params?.row?.attendanceList?.find(att => att.lessonNumber === lesson.lessonNumber);
-                  if (lessonData) {
-                    const score = lessonData.score;
-                    const scoreClass = score < 50 ? 'circle-red' : score < 80 ? 'circle-yellow' : 'circle-green';
-                    return (
-                      <div className={`circle ${scoreClass}`}>
-                        {score}%
-                      </div>
-                    );
+  const getData = async () => {
+    try {
+      const { data } = await httpClient(`/teacher/statistics?moduleNumber=${modul}`);
+      setTableData(data);
+      
+      // Build dynamic columns for lessons
+      const lessonColumns:GridColDef[] = [];
+      data.forEach((student:Student) => {
+         student.attendanceList.forEach((lesson) => {
+          if (!lessonColumns.some(col => col.field === `lesson_${lesson.lessonNumber}`)) {
+            lessonColumns.push({
+              field: `lesson_${lesson.lessonNumber}`,
+              headerName: `Lesson ${lesson.lessonNumber}`,
+              width: 100,
+              renderCell: (params) => {
+                const lessonData = params?.row?.attendanceList?.find(
+                  (att: Attendance) => att.lessonNumber === lesson.lessonNumber
+                );
+              
+                if (lessonData) {
+                  const score = lessonData.score;
+                  let scoreClass = '';
+              
+                  if (score === 0) {
+                    scoreClass = 'bg-red-500'; // Red for score 0
+                  } else if (score < 50) {
+                    scoreClass = 'bg-red-500'; // Red for less than 50
+                  } else if (score < 80) {
+                    scoreClass = 'bg-yellow-500'; // Yellow for 50 to 79
+                  } else {
+                    scoreClass = 'bg-green-500'; // Green for 80 and above
                   }
-                  return <div>No Data</div>;
+                  return (
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${scoreClass}`}>
+                    {score && score > 0 && score !== 'No Data' ? `${score}%` : '0%'}
+                  </div>
+            
+                  );
                 }
-              });
-            }
-          });
+                return <div>No Data</div>;
+              }
+            });
+          }
         });
-
-        setColumns(prevColumns => [...prevColumns, ...lessonColumns]);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false);
       });
-  }, [modul]); // Refetch when module changes
+      
+      setColumns((prevColumns:any) => [...prevColumns, ...lessonColumns]);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
 
-  const getRowId = (row) => row.id || row.studentName;
+  useEffect(() => {
+    getData();
+  }, [modul]); 
+
+  const getRowId = (row:Student) => row.id || row.studentName;
 
   const handleNextModule = () => {
     modul = +modul + 1;

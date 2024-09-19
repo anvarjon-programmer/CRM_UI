@@ -3,6 +3,8 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useSearchAppParams } from '../../hooks/useSearchParams';
 import { httpClient } from '../../utils/reques';
+import { TextField } from '@mui/material';
+import './DataTable.css'
 
 interface Attendance {
   lessonNumber: number;
@@ -24,6 +26,8 @@ const CustomRow = styled('div')(({ theme }) => ({
 const DataTable:React.FC = () => {
   const [tableData, setTableData] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchText,setSearchText] = useState<string>('');
+  const [filteredData, setFilteredData] = useState<Student[]>(tableData);  // Initialize with the full data
   const { getParams, setParams } = useSearchAppParams();
 
   let modul = getParams("module") ?? 1;
@@ -48,11 +52,29 @@ const DataTable:React.FC = () => {
     try {
       const { data } = await httpClient(`/teacher/statistics?moduleNumber=${modul}`);
       setTableData(data);
+      setFilteredData(data);
       
-      // Build dynamic columns for lessons
-      const lessonColumns:GridColDef[] = [];
+      // Dastlab "Student" ustunini qo'yamiz
+      const initialColumns: GridColDef[] = [
+        {
+          field: 'avatar',
+          headerName: 'Student',
+          width: 300,
+          renderCell: (params:any) => (
+            <div className="flex items-center space-x-4 border p-2 rounded-lg">
+              <img className='w-12 h-12 rounded-full object-cover' src={params?.row?.avatar} alt={params.row.studentName} />
+              <div>
+                <span className="font-medium">{params?.row?.studentName} {params?.row?.studentSurname}</span>
+              </div>
+            </div>
+          ),
+        },
+      ];
+  
+      // Dars ustunlarini yaratamiz
+      const lessonColumns: GridColDef[] = [];
       data.forEach((student:Student) => {
-         student.attendanceList.forEach((lesson) => {
+        student.attendanceList.forEach((lesson) => {
           if (!lessonColumns.some(col => col.field === `lesson_${lesson.lessonNumber}`)) {
             lessonColumns.push({
               field: `lesson_${lesson.lessonNumber}`,
@@ -62,41 +84,44 @@ const DataTable:React.FC = () => {
                 const lessonData = params?.row?.attendanceList?.find(
                   (att: Attendance) => att.lessonNumber === lesson.lessonNumber
                 );
-              
+                
                 if (lessonData) {
                   const score = lessonData.score;
-                  let scoreClass = '';
-              
+                  let scoreClass = 'circle-red ';
+                
                   if (score === 0) {
-                    scoreClass = 'bg-red-500'; // Red for score 0
+                    scoreClass = 'circle-yellow';
                   } else if (score < 50) {
-                    scoreClass = 'bg-red-500'; // Red for less than 50
-                  } else if (score < 80) {
-                    scoreClass = 'bg-yellow-500'; // Yellow for 50 to 79
+                    scoreClass = 'circle-green'; 
+                  } else if (score < 70) {
+                    scoreClass = 'circle-green'; 
                   } else {
-                    scoreClass = 'bg-green-500'; // Green for 80 and above
+                    scoreClass = 'circle-green'; 
                   }
+                
                   return (
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${scoreClass}`}>
-                    {score && score > 0 && score !== 'No Data' ? `${score}%` : '0%'}
-                  </div>
-            
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white border-2 ${scoreClass}`}>
+                      {score ? `${score}%` : '0%'}
+                    </div>
                   );
                 }
+                
                 return <div>No Data</div>;
               }
             });
           }
         });
       });
-      
-      setColumns((prevColumns:any) => [...prevColumns, ...lessonColumns]);
+  
+      // Ustunlarni yangilab qo'yamiz
+      setColumns([...initialColumns, ...lessonColumns]);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     getData();
@@ -117,12 +142,32 @@ const DataTable:React.FC = () => {
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();  
+    setSearchText(value);  
+    
+    const filtered = tableData.filter(student =>
+      student.studentName.toLowerCase().includes(value) || student.studentSurname.toLowerCase().includes(value)
+    );
+    
+    setFilteredData(filtered);  
+  };
+
   return (
     <div style={{ height: 700, width: '100%' }}>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
+            <div className='my-4'>
+              <TextField
+              variant='outlined'
+              label="Search by Student Name"
+              value={searchText}
+              onChange={handleSearch}
+              fullWidth
+              />
+            </div>
           <div className='w-full bg-black h-10 flex items-center justify-center'>
             <div className='flex items-center justify-between w-full px-5'>
               <button className='text-white' onClick={handlePrevModule}>Prev</button>
@@ -131,7 +176,7 @@ const DataTable:React.FC = () => {
             </div>
           </div>
           <DataGrid
-            rows={tableData}
+            rows={filteredData}
             columns={columns}
             getRowId={getRowId}
             initialState={{

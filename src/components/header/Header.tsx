@@ -40,8 +40,18 @@ const Header = () => {
             </button>) : (
               <>
                 <Link to="/createLessonForm" className='hidden md:flex items-center gap-1 text-gray-500'>
-                <span className='text-xl'>
+                <span >
                    Add Lesson
+                </span>
+                 </Link>
+                 <Link to="/checkLossonDemo" className='hidden md:flex items-center gap-1 text-gray-500'>
+                <span >
+                   chek lesson
+                </span>
+                 </Link>
+                 <Link to="/addModuls" className='hidden md:flex items-center gap-1 text-gray-500'>
+                <span >
+                   Add Moduls
                 </span>
                  </Link>
               </>

@@ -29,6 +29,12 @@ const DataTable:React.FC = () => {
   const [searchText,setSearchText] = useState<string>('');
   const [filteredData, setFilteredData] = useState<Student[]>(tableData);  // Initialize with the full data
   const { getParams, setParams } = useSearchAppParams();
+  const [mockData,setMockData] = useState([
+    {
+      avatar:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fuser_149071&psig=AOvVaw13ubKw16vtr4ykX-cx-W_i&ust=1727115346353000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMjDv5yU14gDFQAAAAAdAAAAABAE",
+      lesson:'1',
+    }
+  ])
 
   let modul = getParams("module") ?? 1;
 

@@ -7,6 +7,9 @@ import CreateLessonForm from "../page/CreateLessonForm/CreateLessonForm"
 import Chat from "../page/chats/Chat"
 import Notification from "../page/Notification/Notification"
 import StudentProgress from "../components/table/Homeworks"
+import DataGridDemo from "../components/table/TrashTable"
+import CheckLossonDemo from "../page/checkLesson/CheckLesson"
+import AddModuls from "../page/Module/AddModuls"
 
   export const AuthRouter =() =>{
     return(
@@ -30,7 +33,9 @@ import StudentProgress from "../components/table/Homeworks"
               <Route path="chat" element={<Chat/>}/> 
               <Route path="notification" element={<Notification/>}/> 
               <Route path="studentProgress" element={<StudentProgress/>}/>  
-
+              <Route path="dataGridDemo" element={<DataGridDemo/>}/>  
+              <Route path="checkLossonDemo" element={<CheckLossonDemo/>}/>  
+              <Route path="addModuls" element={<AddModuls/>}/>  
           </Route>
         </Routes>
       </>

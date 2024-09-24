@@ -10,6 +10,7 @@ import StudentProgress from "../components/table/Homeworks"
 import DataGridDemo from "../components/table/TrashTable"
 import CheckLossonDemo from "../page/checkLesson/CheckLesson"
 import AddModuls from "../page/Module/AddModuls"
+import Evaluation from "../page/evaluation/Evaluation"
 
   export const AuthRouter =() =>{
     return(
@@ -28,7 +29,6 @@ import AddModuls from "../page/Module/AddModuls"
         <Routes>
           <Route path='/' element={<BaseLAyout/>}>
               <Route path="/" element={<Home/>}/> 
-              {/* <Route path="/createLessonForm" element={<CreateLessonForm/>}/>   */}
               <Route path="createLessonForm" element={<CreateLessonForm/>}/>  
               <Route path="chat" element={<Chat/>}/> 
               <Route path="notification" element={<Notification/>}/> 
@@ -36,6 +36,7 @@ import AddModuls from "../page/Module/AddModuls"
               <Route path="dataGridDemo" element={<DataGridDemo/>}/>  
               <Route path="checkLossonDemo" element={<CheckLossonDemo/>}/>  
               <Route path="addModuls" element={<AddModuls/>}/>  
+              <Route path="/evaluation" element={<Evaluation/>}/>  
           </Route>
         </Routes>
       </>

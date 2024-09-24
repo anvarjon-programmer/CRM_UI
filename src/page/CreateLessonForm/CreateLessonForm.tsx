@@ -2,18 +2,34 @@ import React, { useState } from 'react';
 import { httpClient } from '../../utils/reques';
 
 const CreateLessonForm = () => {
-  const [subjectName, setSubjectName] = useState('');
-  const [aboutSubject, setAboutSubject] = useState('');
-  const [extraLesson, setExtraLesson] = useState('');
-  const [video, setVideo] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [additionalLinks, setAdditionalLinks] = useState([""]);
+  const [lessonVideo, setLessonVideo] = useState<any>();
+  const [coverOfLesson, setCoverOfLesson] = useState<any>();
+  const [moduleId, setModuleId] = useState('');
   const [data, setData] = useState([]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const newData: any = { subjectName, aboutSubject, extraLesson, video };
-    const { data } = await httpClient('/createLesson', newData);
+
+    console.log(coverOfLesson);
+    console.log(lessonVideo);
+    
+    
+    const newData: any = {
+      title: title, 
+      description: description,
+      additionalLinks: additionalLinks, 
+      lessonVideo: lessonVideo, 
+      coverOfLesson: coverOfLesson, 
+      moduleId: moduleId
+    };
+    const { data } = await httpClient.post('/teacher/create-lesson', newData);
     setData(data);
   };
+
+
 
   return (
     <div className="w-full h-full bg-gray-100">
@@ -32,8 +48,8 @@ const CreateLessonForm = () => {
               <input
                 type="text"
                 id="title"
-                value={subjectName}
-                onChange={e => setSubjectName(e.target.value)}
+                value={title}
+                onChange={e => setTitle(e.target.value)}
                 placeholder="Mavzu.."
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
               />
@@ -44,8 +60,8 @@ const CreateLessonForm = () => {
                 Dars haqida:
               </label>
               <textarea
-                value={aboutSubject}
-                onChange={e => setAboutSubject(e.target.value)}
+                value={description}
+                onChange={e => setDescription(e.target.value)}
                 id="description"
                 placeholder="Dars haqida.."
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
@@ -56,31 +72,34 @@ const CreateLessonForm = () => {
               <label className="block font-semibold mb-2 text-gray-700" htmlFor="resources">
                 Qo'shimcha darsliklar:
               </label>
-              <input
-                type="text"
-                value={extraLesson}
-                onChange={e => setExtraLesson(e.target.value)}
-                id="resources"
-                placeholder="Qo'shimcha linklar.."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
-              />
-            </div>
+              <div>
+              <div>
+                {
+                  additionalLinks.map((i, index) => (
+                    <input
+                    type="text"
 
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 w-full"
-              >
-                Yuklash
-              </button>
+                    value={additionalLinks[index]}
+                    onChange={e => {
+                      const newArr = [...additionalLinks]
+                      newArr[index] = e.target.value
+                      setAdditionalLinks(newArr)
+                    }}
+                    id="resources"
+                    placeholder="Qo'shimcha linklar.."
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+                  />
+                  ))
+                }
+              </div>
+              <button>+</button>
+              </div>
             </div>
-          </form>
-          <div className="flex flex-col justify-center items-center mt-10">
+            <div className="flex flex-col justify-center items-center mt-10">
             <input
-              type="text"
+              type="file"
               id="video"
-              value={video}
-              onChange={e => setVideo(e.target.value)}
+              onChange={(e: any) => setLessonVideo(e.target.files[0])}
               className="w-[300px] h-[280px] bg-blue-100 rounded-lg flex justify-center items-center text-white bg-cover bg-center bg-[#25AFDC]"
               style={{
                 backgroundImage: `url('https://cdn-icons-png.flaticon.com/512/32/32339.png')`,
@@ -88,6 +107,46 @@ const CreateLessonForm = () => {
             />
             <p className="text-center mt-4 text-gray-700">Video joylash uchun joy</p>
           </div>
+          <div>
+              <label className="block font-semibold mb-2 text-gray-700" htmlFor="resources">
+                img:
+              </label>
+              <input
+                type="file"
+                onChange={(e: any) => {
+                  setCoverOfLesson(e.target.files[0])                  
+                }}
+                id="resources"
+                placeholder="Qo'shimcha linklar.."
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+              />
+          </div>
+
+          <div>
+              <label className="block font-semibold mb-2 text-gray-700" htmlFor="resources">
+                ModulId
+              </label>
+              <input
+                type="text"
+                value={moduleId}
+                onChange={e => setModuleId(e.target.value)}
+                id="resources"
+                placeholder="Qo'shimcha linklar.."
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
+              />
+          </div>
+
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-blue-600 text-black py-4 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 w-full"
+              >
+                Yuklash
+              </button>
+            </div>
+          
+          </form>
         </div>
       </div>
     </div>

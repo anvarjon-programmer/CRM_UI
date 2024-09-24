@@ -1,10 +1,10 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { BsMedium } from "react-icons/bs";
-import { LiaEditSolid } from "react-icons/lia";
+import { RiSoundModuleFill } from "react-icons/ri";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import './Header.scss';
 import Search from '../Search/Search';
 import { useState } from 'react';
@@ -39,20 +39,12 @@ const Header = () => {
               Publish
             </button>) : (
               <>
-                <Link to="/createLessonForm" className='hidden md:flex items-center gap-1 text-gray-500'>
-                <span >
-                   Add Lesson
-                </span>
-                 </Link>
                  <Link to="/checkLossonDemo" className='hidden md:flex items-center gap-1 text-gray-500'>
-                <span >
-                   chek lesson
-                </span>
+                   <IoCheckmarkDoneSharp size={25}/>
                  </Link>
+                 
                  <Link to="/addModuls" className='hidden md:flex items-center gap-1 text-gray-500'>
-                <span >
-                   Add Moduls
-                </span>
+                   <RiSoundModuleFill size={20}/>
                  </Link>
               </>
               )}

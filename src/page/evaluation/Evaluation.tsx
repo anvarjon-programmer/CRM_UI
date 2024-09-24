@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { httpClient } from '../../utils/reques';
-import axios from 'axios';
-import { head } from 'lodash';
 
 const Evaluation = () => {
     const [data, setData] = useState([]);
@@ -10,8 +8,11 @@ const Evaluation = () => {
     const [score,setScore] = useState('')
     const [id,setId] = useState('')
 
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);   
+
     const getAllData = async () => {
-        const { data } = await httpClient("/teacher/getUncheckedAttendanceResponse7dc072bf-460f-43f5-add1-7d32d050918c")
+        const { data } = await httpClient(`/teacher/getUncheckedAttendanceResponse${params.get('id')}`)
         setData(data)
         console.log(data);
     }
@@ -24,28 +25,12 @@ const Evaluation = () => {
         setModalOpen(!modalOpen);
     }
 
-    const handLeSubmit = async (e: any) => {
-        e.preventDefault(); // e.preventDefault() ni ochiq qoldirdim, ehtiyot bo'lish uchun
-        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkMWQ4NmM1OC0zMWI5LTQxZjAtOTVkOC1jZmMzN2ZmZTgyOTEiLCJpYXQiOjE3MjcxNzkwNjUsImV4cCI6MTcyNzc4Mzg2NSwicm9sZXMiOlsiUk9MRV9URUFDSEVSIl19.EYOdo4RV_QkGCfa3XLDx5O86LuhiVPry3vCJqk8k6oc'; // Tokenni mana bu yerga kiritasiz
-        const newData = { feedBack, score, id }; // kerakli ma'lumotlar
-    
-        try {
-            await axios.put(
-                "http://164.90.187.178:8080/api/v1/teacher/check-attendance",
-                {newData},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                }
-            );
-            console.log("Request was successful");
-        } catch (error: any) {
-            console.error("Error during the request:", error.response ? error.response.data : error.message);
-        }
-        
-        getAllData(); // So'rovdan keyin ma'lumotlarni qayta yuklash
-    }
+    const handLeSubmit = async (e) =>{
+        e.preventDefault()
+        const newData:any = {feedBack,score,id: params.get('id')}
+        await httpClient.post("/teacher/check-attendance", newData)
+        getAllData()
+    } 
 
     return (
         <div>
@@ -99,17 +84,10 @@ const Evaluation = () => {
                                         placeholder="Izoh qoldiring" className='w-full px-3 py-2 border rounded' />
                                     </div>
 
-                                    <div className='mb-4'>
-                                        <label className='block mb-2'>Izoh</label>
-                                        <input 
-                                        value={id}
-                                        onChange={e => setId(e.target.value)}
-                                        type="text" 
-                                        placeholder="Id" className='w-full px-3 py-2 border rounded' />
-                                    </div>
+                                    
                                     <div className='text-right'>
                                         <button 
-                                            // onClick={toggleModal} 
+                                            onClick={toggleModal} 
                                             className='bg-blue-500 text-black py-2 px-4 rounded hover:bg-blue-700 transition duration-300'>
                                             Yopish
                                         </button>

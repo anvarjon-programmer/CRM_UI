@@ -10,11 +10,13 @@ const CreateLessonForm = () => {
   const [moduleId, setModuleId] = useState('');
   const [data, setData] = useState([]);
 
+  
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    console.log(coverOfLesson);
-    console.log(lessonVideo);
+    const windowUrl = window.location.search;
+    const params = new URLSearchParams(windowUrl);      
     
     
     const newData: any = {
@@ -23,7 +25,7 @@ const CreateLessonForm = () => {
       additionalLinks: additionalLinks, 
       lessonVideo: lessonVideo, 
       coverOfLesson: coverOfLesson, 
-      moduleId: moduleId
+      moduleId: params.get('id')
     };
     const { data } = await httpClient.post('/teacher/create-lesson', newData);
     setData(data);
@@ -122,19 +124,7 @@ const CreateLessonForm = () => {
               />
           </div>
 
-          <div>
-              <label className="block font-semibold mb-2 text-gray-700" htmlFor="resources">
-                ModulId
-              </label>
-              <input
-                type="text"
-                value={moduleId}
-                onChange={e => setModuleId(e.target.value)}
-                id="resources"
-                placeholder="Qo'shimcha linklar.."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
-              />
-          </div>
+          
 
 
             <div className="flex justify-center">

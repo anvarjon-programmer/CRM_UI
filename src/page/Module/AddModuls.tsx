@@ -58,6 +58,7 @@ const AddModuls: React.FC = () => {
     getAllData();
   }, []);
 
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 flex justify-center items-center bg-gray-100">
       <div className="bg-white overflow-y-scroll p-6 rounded-xl shadow-xl w-full h-[500px] max-w-[1000px] -mt-[55px]">
@@ -82,9 +83,11 @@ const AddModuls: React.FC = () => {
         </span>
       </button>
 
-      <Link to="/createLessonForm" className="ml-2">
+      <div>
+      <Link to={`/createLessonForm?id=${item.module_id}`} className="ml-2">
         <FaPlus className="text-white hover:text-blue-800" />
       </Link>
+      </div>
     </div>
 
     {dropdownState[item.moduleNumber] && (

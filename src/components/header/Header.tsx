@@ -20,13 +20,12 @@ const Header = () => {
     <header className='border-b border-gray-600 bg-white  mb-20 '>
          <div className="size h-[60px] flex items-center justify-between px-10 fixed z-50 right-0 left-0 bg-white border-b ">
             <div className='flex items-center gap-3 sm:gap-7'>
-              
               <Link to='/'>
               <span className=''>
                 <img className='w-[90px]' src="https://static.tildacdn.one/tild3562-6566-4532-b264-383261343639/logo_1_copy.png" alt="" />
               </span>
             </Link>
-            <Search modal={searchModal} setModal={setSearchModal}/>
+            {/* <Search modal={searchModal} setModal={setSearchModal}/> */}
             </div>
             {/* right */}
             <div className='flex items-center gap-3 sm:gap-7'>

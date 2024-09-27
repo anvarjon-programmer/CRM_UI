@@ -1,6 +1,6 @@
 import { Button, Card, Checkbox, message } from "antd";
 import { FastField } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FormContainer } from "../../../components/form";
 import { hoc } from "../../../utils/hoc";
 import { MainInput } from "../../../components/main-input";
@@ -12,6 +12,7 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
         localStorage.clear();
         sessionStorage.clear();
     }, []);
+    const [phoneNum,setPhoneNum] = useState('');
     
     return (
         <section
@@ -51,7 +52,10 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                             name: "phoneNumber",
                             validations: [{ type: "required" }],
                             value: "998944676789",
-                            onSubmitValue: (value) => value,
+                            onSubmitValue: (value) => {
+                                setPhoneNum(value)
+                                return value;
+                            },
                         },
                         {
                             name: "password",
@@ -62,8 +66,8 @@ export const Login = hoc(useLoginProps, ({ dispatch, navigate, isRememberMe }) =
                     ]}
                 >
                     {({ isSubmitting, values }) => {
-                        console.log(values)
-                        return (
+                            localStorage.setItem("phoneNum", phoneNum)
+                            return (
                             <div className="flex flex-col gap-2.5">
                                 <div>
                                     <FastField

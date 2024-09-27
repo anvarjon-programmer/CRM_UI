@@ -15,3 +15,4 @@ export const useFetchQuery = ({ url, params = {} }: FetchListProps) => {
     queryFn: (context) => queryFn(context, params),
   });
 };
+
